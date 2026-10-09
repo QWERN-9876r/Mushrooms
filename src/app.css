@@ -1,0 +1,37 @@
+:root {
+    --font-body: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --font-display: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
+    --font-mono: ui-monospace, 'Cascadia Code', 'SF Mono', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #0a0a0f;
+    color: #e8e8e8;
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+canvas {
+    display: block;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
