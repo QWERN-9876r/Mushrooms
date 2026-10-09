@@ -1,6 +1,7 @@
 <script lang="ts">
     import { browser } from '$app/environment'
     import { watchDesktopOnlyBlocked } from '$lib/utils/desktopOnly'
+    import { t } from '$lib/i18n'
 
     let blocked = $state(false)
 
@@ -16,10 +17,11 @@
     <div class="gate" role="dialog" aria-modal="true" aria-labelledby="desktop-only-title">
         <div class="gate__panel">
             <p class="gate__icon" aria-hidden="true">🖥️</p>
-            <h1 id="desktop-only-title" class="gate__title">Только для ПК</h1>
+            <h1 id="desktop-only-title" class="gate__title">
+                {t('desktopOnly.title')}
+            </h1>
             <p class="gate__text">
-                Игра рассчитана на компьютер с мышью и большим экраном.
-                Откройте сайт на настольном компьютере или ноутбуке.
+                {t('desktopOnly.text')}
             </p>
         </div>
     </div>

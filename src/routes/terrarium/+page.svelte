@@ -19,9 +19,11 @@
     import { poison } from '$lib/stores/poison.svelte'
     import { victory } from '$lib/stores/victory.svelte'
     import { getTerrariumAssetUrls } from '$lib/utils/getAssetUrls'
+    import { t } from '$lib/i18n'
 
     let isDead = $derived(browser && pageLoad.ready && poison.isDead)
     let isVictory = $derived(pageLoad.ready && victory.celebrationActive)
+    const isJokeLabel = Math.random() > 0.9
 </script>
 
 <div class="game-screen" class:is-dead={isDead}>
@@ -42,7 +44,7 @@
     {/if}
 
     {#if browser && pageLoad.ready && !poison.isDead && !victory.celebrationActive}
-        <NavigationButton href="/">Лес</NavigationButton>
+        <NavigationButton href="/">{t('nav.forest')}</NavigationButton>
     {/if}
 
     {#if browser && pageLoad.ready && !poison.isDead && !victory.celebrationActive}
@@ -61,7 +63,7 @@
                 onclick={() => cauldron.brew()}
             >
                 <span class="brew-btn__glow" aria-hidden="true"></span>
-                <span class="brew-btn__label">Сварить</span>
+                <span class="brew-btn__label">{t('terrarium.brew')}</span>
             </button>
         {/if}
     {/if}
@@ -80,9 +82,7 @@
 <LoadingOverlay
     progress={pageLoad.progress}
     visible={browser && !pageLoad.ready}
-    label={Math.random() > 0.9
-        ? 'В жопу IT идем жить в котел'
-        : 'Идем к котлу...'}
+    label={t(isJokeLabel ? 'loading.terrariumJoke' : 'loading.terrarium')}
 />
 
 <DeathOverlay visible={isDead} />

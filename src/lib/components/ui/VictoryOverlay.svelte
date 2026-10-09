@@ -1,5 +1,6 @@
 <script lang="ts">
     import { VICTORY_GOAL, victory } from '$lib/stores/victory.svelte'
+    import { t } from '$lib/i18n'
 
     interface Props {
         visible: boolean
@@ -11,16 +12,16 @@
 {#if visible}
     <div class="victory-backdrop" role="dialog" aria-modal="true" aria-labelledby="victory-title">
         <div class="victory-panel">
-            <p id="victory-title" class="victory-title">ПОБЕДА</p>
+            <p id="victory-title" class="victory-title">{t('victory.title')}</p>
             <p class="victory-subtitle">
-                {VICTORY_GOAL} легендарных зелий — алхимик леса побеждён
+                {t('victory.subtitle', { goal: VICTORY_GOAL })}
             </p>
             <button
                 type="button"
                 class="victory-btn"
                 onclick={() => victory.dismissCelebration()}
             >
-                Продолжить
+                {t('victory.continue')}
             </button>
         </div>
     </div>

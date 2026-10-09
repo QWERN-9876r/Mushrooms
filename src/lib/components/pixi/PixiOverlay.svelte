@@ -505,8 +505,8 @@
             warmupPixiRenderer(
                 app,
                 effectPools,
-                () => spawnBrewEffect('Зелье жизни'),
-                () => spawnDrinkEffect('Зелье жизни'),
+                () => spawnBrewEffect('life_potion'),
+                () => spawnDrinkEffect('life_potion'),
                 (deltaMs) => {
                     animateBrewEffect(deltaMs)
                     animateDrinkEffect(deltaMs)

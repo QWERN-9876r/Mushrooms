@@ -1,6 +1,6 @@
 export interface Mushroom {
     scale: number
-    name: string
+    id: string
     modelPath: string
     rare?: 'rare' | 'legendary'
     count?: number
@@ -9,7 +9,7 @@ export interface Mushroom {
 
 export interface Potion {
     scale: number
-    name: string
+    id: string
     modelPath: string
     rare?: 'rare' | 'legendary'
     position?: MushroomPosition

@@ -17,8 +17,10 @@
     import { poison } from '$lib/stores/poison.svelte'
     import { victory } from '$lib/stores/victory.svelte'
     import { getForestAssetUrls } from '$lib/utils/getAssetUrls'
+    import { t } from '$lib/i18n'
 
     let isInventoryOpen = $state(false)
+    const isJokeLabel = Math.random() > 0.9
     let isDead = $derived(pageLoad.ready && poison.isDead)
     let isVictory = $derived(pageLoad.ready && victory.celebrationActive)
 </script>
@@ -50,14 +52,16 @@
                 class="inventory-toggle-btn"
                 onclick={() => (isInventoryOpen = !isInventoryOpen)}
             >
-                Инвентарь
+                {t('forest.inventory')}
             </button>
         {/if}
     </div>
 
     {#if pageLoad.ready && !poison.isDead && !victory.celebrationActive}
-        <NavigationButton href="/terrarium">Котел</NavigationButton>
-        <h2>Нажми пробел, чтобы идти дальше по лесу</h2>
+        <NavigationButton href="/terrarium">
+            {t('nav.cauldron')}
+        </NavigationButton>
+        <h2>{t('forest.dashHint')}</h2>
     {/if}
 
     {#if pageLoad.ready && !poison.isDead && !victory.celebrationActive}
@@ -78,7 +82,7 @@
 <LoadingOverlay
     progress={pageLoad.progress}
     visible={browser && !pageLoad.ready}
-    label={Math.random() > 0.9 ? 'В жопу IT идем жить в лес' : 'Идем в лес...'}
+    label={t(isJokeLabel ? 'loading.forestJoke' : 'loading.forest')}
 />
 
 <DeathOverlay visible={isDead} />

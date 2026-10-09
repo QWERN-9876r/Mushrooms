@@ -1,4 +1,5 @@
 import { browser } from '$app/environment'
+import { migrateItemCounts } from '$lib/utils/legacyItemIds'
 
 class InventoryStore {
     #items = $state<Record<string, number>>({})
@@ -8,7 +9,8 @@ class InventoryStore {
 
         const saved = localStorage.getItem('player_inventory')
         if (saved) {
-            this.#items = JSON.parse(saved)
+            this.#items = migrateItemCounts(JSON.parse(saved))
+            this.#persist()
         }
     }
 

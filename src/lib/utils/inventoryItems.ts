@@ -6,6 +6,7 @@ import {
     POTIONS,
 } from '$lib/components/threlte/components/potions'
 import type { InventoryItem } from '$lib/components/threlte/components/types'
+import { t } from '$lib/i18n'
 
 export function getInventoryItem(name: string): InventoryItem | undefined {
     return MUSHROOMS[name]?.[0] ?? POTIONS[name]?.[0]
@@ -37,11 +38,11 @@ export function getPotionInventoryHint(
     const parts: string[] = []
 
     if (isPotion(name) && inTerrarium) {
-        parts.push('Перетащи в котёл с грибом')
+        parts.push(t('inventory.dragToCauldron'))
     }
 
     if (isDrinkablePotion(name)) {
-        parts.push('Клик — выпить')
+        parts.push(t('inventory.clickToDrink'))
     }
 
     return parts.length > 0 ? parts.join(' · ') : null

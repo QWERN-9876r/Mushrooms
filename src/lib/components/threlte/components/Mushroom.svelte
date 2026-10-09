@@ -1,6 +1,7 @@
 <script lang="ts">
     import { T } from '@threlte/core'
     import { useGltf } from '@threlte/extras'
+    import { GLTF_OPTIONS } from '$lib/utils/gltfOptions'
     import type { Mushroom, MushroomPosition } from './types'
     import { inventory } from '$lib/stores/inventory.svelte'
     import { poison } from '$lib/stores/poison.svelte'
@@ -21,7 +22,7 @@
         position[2] + (mushroom.position?.[2] || 0),
     ])
 
-    const loader = useGltf()
+    const loader = useGltf(GLTF_OPTIONS)
     const currentPath = $derived(mushroom.modelPath)
     const gltfMushroom = $derived(loader.load(withBase(currentPath)))
 
@@ -32,7 +33,7 @@
         e.stopPropagation()
 
         poison.resumeAfterAction()
-        inventory.addItem(mushroom.name)
+        inventory.addItem(mushroom.id)
 
         onCollect()
     }

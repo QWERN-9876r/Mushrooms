@@ -1,5 +1,6 @@
 <!-- src/lib/components/ui/Sidebar.svelte -->
 <script lang="ts">
+    import { t } from '$lib/i18n'
     interface Plant {
         id: string
         name: string
@@ -41,7 +42,7 @@
 <aside class="sidebar">
     <header class="sidebar-header">
         <span class="logo">🌿</span>
-        <h1 class="title">Оранжерея</h1>
+        <h1 class="title">{t('sidebar.title')}</h1>
     </header>
 
     <nav class="plant-list">

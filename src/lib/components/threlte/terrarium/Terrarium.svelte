@@ -2,6 +2,7 @@
     import { Raycaster, Vector2, Vector3 } from 'three'
     import { T, useTask, useThrelte } from '@threlte/core'
     import { useGltf, interactivity } from '@threlte/extras'
+    import { GLTF_OPTIONS } from '$lib/utils/gltfOptions'
     import { normalizeMouse } from '$lib/stores/mouse'
     import Forest from '../components/Forest.svelte'
     import Inventory3D from '../components/ui/Inventory3D.svelte'
@@ -19,8 +20,8 @@
 
     interactivity()
 
-    const gltfResult = useGltf(withBase('/models/terrarium.glb'))
-    const boiler = useGltf(withBase('/models/cauldron.glb'))
+    const gltfResult = useGltf(withBase('/models/terrarium.glb'), GLTF_OPTIONS)
+    const boiler = useGltf(withBase('/models/cauldron.glb'), GLTF_OPTIONS)
 
     const { camera, canvas } = useThrelte()
     const worldPoint = new Vector3()
@@ -108,10 +109,7 @@
         if ($boiler?.scene) {
             const intersects = raycaster.intersectObject($boiler.scene, true)
 
-            if (
-                intersects.length > 0 &&
-                cauldron.addIngredient(dropped.id)
-            ) {
+            if (intersects.length > 0 && cauldron.addIngredient(dropped.id)) {
                 inventory.removeItem(dropped.id)
             }
         }

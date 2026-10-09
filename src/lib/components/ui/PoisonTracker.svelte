@@ -1,5 +1,6 @@
 <script lang="ts">
     import { poison } from '$lib/stores/poison.svelte'
+    import { settings } from '$lib/stores/settings.svelte'
 
     interface Props {
         zone: 'forest' | 'terrarium'
@@ -16,7 +17,7 @@
         const tick = (now: number) => {
             const delta = Math.min((now - last) / 1000, 0.1)
             last = now
-            poison.tick(delta)
+            if (!settings.menuOpen) poison.tick(delta)
             frame = requestAnimationFrame(tick)
         }
 

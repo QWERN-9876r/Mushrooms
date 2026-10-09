@@ -1,10 +1,10 @@
-import type { Mushroom, MushroomPostition } from './types'
+import type { Mushroom, MushroomPosition } from './types'
 import {
     BASE_LUCK_PERCENT,
     luckPercentToMultiplier,
 } from '$lib/stores/buffs.svelte'
 
-export const MUSHROOM_POSITIONS: MushroomPostition[] = [
+export const MUSHROOM_POSITIONS: MushroomPosition[] = [
     [-2.712876630185474, -2.312788560176625, -15.634365714603094],
     [-3.642249848302943, -3.0413407762073548, -9.820597572855952],
     [3.169651985049814, -2.9998165709670084, -9.897008550403347],
@@ -90,39 +90,39 @@ export const MUSHROOM_POSITIONS: MushroomPostition[] = [
 
 const SIMPLE_MUSHROOMS: Mushroom[] = [
     {
-        name: 'Паганка',
+        id: 'toadstool',
         scale: 0.8,
         modelPath: '/models/mushrooms/mushroom.glb',
     },
     {
-        name: 'Странный гриб',
+        id: 'strange_mushroom',
         scale: 0.1,
         modelPath: '/models/mushrooms/mushroom2.glb',
     },
 
     {
-        name: 'Ночные паганки',
+        id: 'night_toadstools',
         scale: 1,
         modelPath: '/models/mushrooms/mushroom_lowpoly.glb',
     },
 
     {
-        name: 'Мухомор',
+        id: 'fly_agaric',
         scale: 0.005,
         modelPath: '/models/mushrooms/fly_agaric_mushroom.glb',
     },
     {
-        name: 'Бледный гриб',
+        id: 'pale_mushroom',
         scale: 0.07,
         modelPath: '/models/mushrooms/mushroom3.glb',
     },
     {
-        name: 'Падший воин',
+        id: 'fallen_warrior',
         scale: 1,
         modelPath: '/models/mushrooms/mushroom4.glb',
     },
     {
-        name: 'Гриб искра',
+        id: 'spark_mushroom',
         scale: 0.05,
         modelPath: '/models/mushrooms/spark_mushroom.glb',
     },
@@ -130,19 +130,19 @@ const SIMPLE_MUSHROOMS: Mushroom[] = [
 
 const RARE_MUSHROOMS: Mushroom[] = [
     {
-        name: 'Воскрешенный гриб',
+        id: 'resurrected_mushroom',
         scale: 0.2,
         rare: 'rare',
         modelPath: '/models/mushrooms/mushroom_tree.glb',
     },
     {
-        name: 'Водный гриб',
+        id: 'water_mushroom',
         scale: 0.25,
         rare: 'rare',
         modelPath: '/models/mushrooms/glowing_mushroom.glb',
     },
     {
-        name: 'Синик',
+        id: 'bluecap',
         scale: 2,
         rare: 'rare',
         modelPath: '/models/mushrooms/stylized_mushroom.glb',
@@ -151,21 +151,21 @@ const RARE_MUSHROOMS: Mushroom[] = [
 
 const LEGENDARY_MUSHROOMS: Mushroom[] = [
     {
-        name: '??',
+        id: 'mystery_mushroom',
         scale: 2,
         rare: 'legendary',
         position: [0, 5, 0],
         modelPath: '/models/mushrooms/stylized_mushroom_1.1.glb',
     },
     {
-        name: 'Магический гриб',
+        id: 'magic_mushroom',
         scale: 0.003,
         rare: 'legendary',
 
         modelPath: '/models/mushrooms/magical_mushroom_blue.glb',
     },
     {
-        name: "'_'",
+        id: 'face_mushroom',
         scale: 0.003,
         position: [0, 2, 0],
         rare: 'legendary',
@@ -175,7 +175,7 @@ const LEGENDARY_MUSHROOMS: Mushroom[] = [
 
 export const MUSHROOMS = Object.groupBy(
     [...SIMPLE_MUSHROOMS, ...RARE_MUSHROOMS, ...LEGENDARY_MUSHROOMS],
-    (m) => m.name,
+    (m) => m.id,
 ) as Record<string, Mushroom[]>
 
 export const getRandomMushroom = (

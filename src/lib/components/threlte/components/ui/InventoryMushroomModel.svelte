@@ -1,6 +1,7 @@
 <script lang="ts">
     import { T } from '@threlte/core'
     import { useGltf, type EventMap } from '@threlte/extras'
+    import { GLTF_OPTIONS } from '$lib/utils/gltfOptions'
     import { Mesh, Object3D, type Object3DEventMap } from 'three'
     import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js'
     import { withBase } from '$lib/utils/publicPath'
@@ -42,7 +43,7 @@
         onDragEnd,
     }: Props = $props()
 
-    const loader = useGltf()
+    const loader = useGltf(GLTF_OPTIONS)
     const gltfStore = $derived(loader.load(withBase(path)))
 
     let isComponentActive = true
@@ -157,8 +158,8 @@
 </script>
 
 {#key path}
-{#if $gltfStore?.scene}
-    {@const gltf = $gltfStore}
+    {#if $gltfStore?.scene}
+        {@const gltf = $gltfStore}
         <!-- 
           Добавляем обработчики событий Threlte на корневую группу.
           Они будут активны, только если передан флаг isDraggable={true}.
@@ -231,5 +232,5 @@
                 {/if}
             </T.Group>
         </T.Group>
-{/if}
+    {/if}
 {/key}

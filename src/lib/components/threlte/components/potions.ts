@@ -1,16 +1,16 @@
 import type { Potion } from './types'
 
-export const FAILED_BREW_POTION = 'Неудачное зелье'
+export const FAILED_BREW_POTION = 'failed_potion'
 
 const POTIONS_LIST: Potion[] = [
     {
-        name: 'Зелье жизни',
+        id: 'life_potion',
         scale: 1,
         modelPath: '/models/potions/life_potion.glb',
         brewTier: 0,
     },
     {
-        name: 'Зелье маны',
+        id: 'mana_potion',
         scale: 0.35,
         modelPath: '/models/potions/mana_potion.glb',
         brewTier: 0,
@@ -18,60 +18,60 @@ const POTIONS_LIST: Potion[] = [
         drinkable: true,
     },
     {
-        name: 'Маленький настой',
+        id: 'small_tincture',
         scale: 0.35,
         modelPath: '/models/potions/small_bottle.glb',
         brewTier: 0,
     },
     {
-        name: 'Загадочное зелье',
+        id: 'mysterious_potion',
         scale: 1.2,
         modelPath: '/models/potions/mysterious_potion.glb',
         brewTier: 1,
     },
     {
-        name: 'Зелье движения',
+        id: 'motion_potion',
         scale: 0.4,
         modelPath: '/models/potions/potion_for_media__motion.glb',
         brewTier: 1,
     },
     {
-        name: 'Тёмное зелье',
+        id: 'dark_potion',
         scale: 0.4,
         modelPath: '/models/potions/dark_magic_potion.glb',
         rare: 'rare',
         brewTier: 2,
     },
     {
-        name: 'Звёздное зелье',
+        id: 'star_potion',
         scale: 0.45,
         modelPath: '/models/potions/star-potion.glb',
         rare: 'rare',
         brewTier: 2,
     },
     {
-        name: 'Зелье стойкости',
+        id: 'endurance_potion',
         scale: 0.4,
         modelPath: '/models/potions/potion2.glb',
         rare: 'rare',
         brewTier: 2,
     },
     {
-        name: 'Вихревое зелье',
+        id: 'swirl_potion',
         scale: 0.5,
         modelPath: '/models/potions/swirly_potion_bottle.glb',
         rare: 'legendary',
         brewTier: 3,
     },
     {
-        name: 'Магическое зелье',
+        id: 'magic_potion',
         scale: 0.12,
         modelPath: '/models/potions/magical_potion_mk2.glb',
         rare: 'legendary',
         brewTier: 3,
     },
     {
-        name: 'Неудачное зелье',
+        id: 'failed_potion',
         scale: 0.4,
         modelPath: '/models/potions/potion.glb',
         rare: 'legendary',
@@ -79,7 +79,7 @@ const POTIONS_LIST: Potion[] = [
     },
 ]
 
-export const POTIONS = Object.groupBy(POTIONS_LIST, (p) => p.name) as Record<
+export const POTIONS = Object.groupBy(POTIONS_LIST, (p) => p.id) as Record<
     string,
     Potion[]
 >
@@ -89,10 +89,10 @@ export const POTION_BY_BREW_TIER: Record<number, string[]> = (() => {
     const tiers: Record<number, string[]> = { 0: [], 1: [], 2: [], 3: [] }
 
     for (const potion of POTIONS_LIST) {
-        if (potion.name === FAILED_BREW_POTION) continue
+        if (potion.id === FAILED_BREW_POTION) continue
 
         const tier = potion.brewTier ?? 1
-        tiers[tier].push(potion.name)
+        tiers[tier].push(potion.id)
     }
 
     return tiers
@@ -100,23 +100,23 @@ export const POTION_BY_BREW_TIER: Record<number, string[]> = (() => {
 
 /** Два гриба — ключ через «|» в алфавитном порядке */
 export const MUSHROOM_BREW_RECIPES: Record<string, string> = {
-    'Мухомор|Паганка': 'Зелье жизни',
-    'Бледный гриб|Гриб искра': 'Зелье маны',
-    'Ночные паганки|Странный гриб': 'Загадочное зелье',
-    'Мухомор|Падший воин': 'Тёмное зелье',
-    'Воскрешенный гриб|Синик': 'Звёздное зелье',
-    'Водный гриб|Магический гриб': 'Вихревое зелье',
-    '??|Магический гриб': 'Магическое зелье',
-    "'_'|??": 'Неудачное зелье',
-    'Воскрешенный гриб|Магический гриб': 'Неудачное зелье',
-    '??|Воскрешенный гриб': 'Неудачное зелье',
+    'fly_agaric|toadstool': 'life_potion',
+    'pale_mushroom|spark_mushroom': 'mana_potion',
+    'night_toadstools|strange_mushroom': 'mysterious_potion',
+    'fallen_warrior|fly_agaric': 'dark_potion',
+    'bluecap|resurrected_mushroom': 'star_potion',
+    'magic_mushroom|water_mushroom': 'swirl_potion',
+    'magic_mushroom|mystery_mushroom': 'magic_potion',
+    'face_mushroom|mystery_mushroom': 'failed_potion',
+    'magic_mushroom|resurrected_mushroom': 'failed_potion',
+    'mystery_mushroom|resurrected_mushroom': 'failed_potion',
 }
 
 /** Гриб + зелье — особые рецепты (остальное через апгрейд по тиру) */
 export const MIXED_BREW_RECIPES: Record<string, string> = {
-    'Зелье маны|Магический гриб': 'Неудачное зелье',
-    'Вихревое зелье|Магический гриб': 'Магическое зелье',
-    'Загадочное зелье|??': 'Неудачное зелье',
+    'magic_mushroom|mana_potion': 'failed_potion',
+    'magic_mushroom|swirl_potion': 'magic_potion',
+    'mysterious_potion|mystery_mushroom': 'failed_potion',
 }
 
 /** @deprecated используй MUSHROOM_BREW_RECIPES */
@@ -124,30 +124,30 @@ export const BREW_RECIPES = MUSHROOM_BREW_RECIPES
 
 export const CAULDRON_POTIONS = POTIONS_LIST.filter(
     (p) => p.cauldronIngredient,
-).map((p) => p.name)
+).map((p) => p.id)
 
-export function getPotionDef(name: string): Potion | undefined {
-    return POTIONS[name]?.[0]
+export function getPotionDef(id: string): Potion | undefined {
+    return POTIONS[id]?.[0]
 }
 
 export function getPotionByModelPath(path: string): Potion | undefined {
     return POTIONS_LIST.find((potion) => potion.modelPath === path)
 }
 
-export function getPotionBrewTier(name: string): number {
-    return getPotionDef(name)?.brewTier ?? 0
+export function getPotionBrewTier(id: string): number {
+    return getPotionDef(id)?.brewTier ?? 0
 }
 
-export function isCauldronIngredient(name: string): boolean {
-    return Boolean(getPotionDef(name)?.cauldronIngredient)
+export function isCauldronIngredient(id: string): boolean {
+    return Boolean(getPotionDef(id)?.cauldronIngredient)
 }
 
-export function isDrinkablePotion(name: string): boolean {
-    const potion = getPotionDef(name)
+export function isDrinkablePotion(id: string): boolean {
+    const potion = getPotionDef(id)
     if (!potion) return false
     return potion.drinkable !== false
 }
 
-export function isLegendaryPotion(name: string): boolean {
-    return getPotionDef(name)?.rare === 'legendary'
+export function isLegendaryPotion(id: string): boolean {
+    return getPotionDef(id)?.rare === 'legendary'
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { poison } from '$lib/stores/poison.svelte'
+    import { t } from '$lib/i18n'
 
     const DEATH_ANIMATION_MS = 3000
     const DEATH_PAUSE_AFTER_MS = 3000
@@ -23,7 +24,7 @@
 
 {#if visible}
     <div class="death-title-wrap" role="alert" aria-live="assertive">
-        <p class="death-title">СМЕРТЬ</p>
+        <p class="death-title">{t('death.title')}</p>
     </div>
     <div class="death-veil" aria-hidden="true"></div>
 {/if}

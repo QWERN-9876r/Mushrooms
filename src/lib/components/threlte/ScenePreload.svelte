@@ -2,6 +2,7 @@
     import { onMount } from 'svelte'
     import { T } from '@threlte/core'
     import { useGltf } from '@threlte/extras'
+    import { GLTF_OPTIONS } from '$lib/utils/gltfOptions'
     import InventoryMushroomModel from './components/ui/InventoryMushroomModel.svelte'
     import { getPotionByModelPath } from './components/potions'
     import { pageLoad } from '$lib/stores/pageLoad.svelte'
@@ -15,7 +16,7 @@
 
     let { urls }: Props = $props()
 
-    const { load } = useGltf()
+    const { load } = useGltf(GLTF_OPTIONS)
 
     const INVENTORY_ITEM_SIZE = 0.35
     const potionUrlSet = new Set(getAllPotionModelUrls())
@@ -61,7 +62,6 @@
 
     onMount(() => {
         pageLoad.reset()
-
         ;(async () => {
             if (urls.length === 0) {
                 pageLoad.complete()

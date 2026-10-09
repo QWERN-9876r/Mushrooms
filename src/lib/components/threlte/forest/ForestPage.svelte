@@ -2,6 +2,7 @@
     import { normalizeMouse } from '$lib/stores/mouse'
     import { T, useTask, useThrelte } from '@threlte/core'
     import { HTML, useGltf } from '@threlte/extras'
+    import { GLTF_OPTIONS } from '$lib/utils/gltfOptions'
     import { withBase } from '$lib/utils/publicPath'
     import Mushrooms from '../components/Mushrooms.svelte'
     import { interactivity } from '@threlte/extras'
@@ -9,6 +10,7 @@
     import { generateMushrooms } from '$lib/utils/generateMushrooms'
     import { throttle } from '$lib/utils/throttle'
     import { poison } from '$lib/stores/poison.svelte'
+    import { settings } from '$lib/stores/settings.svelte'
     import type { PerspectiveCamera } from 'three'
     import { MUSHROOMS } from '../components/constants'
     import { inventory } from '$lib/stores/inventory.svelte'
@@ -108,7 +110,7 @@
     }, 800)
 
     const handleKeyDown = ({ key }: KeyboardEvent) => {
-        if (key === ' ' && !poison.isDead) {
+        if (key === ' ' && !poison.isDead && !settings.menuOpen) {
             handleSpacePress()
         }
     }
@@ -150,7 +152,7 @@
         drinkPotion(potionName)
     }
 
-    const gltfForest = useGltf(withBase('/models/pine_forest.glb'))
+    const gltfForest = useGltf(withBase('/models/pine_forest.glb'), GLTF_OPTIONS)
 </script>
 
 {#if $gltfForest}

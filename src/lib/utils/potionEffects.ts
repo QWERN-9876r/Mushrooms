@@ -3,6 +3,7 @@ import {
     isDrinkablePotion,
     isLegendaryPotion,
 } from '$lib/components/threlte/components/potions'
+import { t } from '$lib/i18n'
 import { buffs } from '$lib/stores/buffs.svelte'
 import { drinkEffect } from '$lib/stores/drinkEffect.svelte'
 import { inventory } from '$lib/stores/inventory.svelte'
@@ -18,6 +19,21 @@ function formatLuckBonusPercent(percent: number): string {
     return `+${text}%`
 }
 
+const FRACTION_GLYPHS: Record<number, string> = {
+    2: '½',
+    3: '⅓',
+    4: '¼',
+    8: '⅛',
+    16: '¹⁄₁₆',
+}
+
+function formatFraction(fraction: number): string {
+    return (
+        FRACTION_GLYPHS[Math.round(1 / fraction)] ??
+        `${Math.round(fraction * 100)}%`
+    )
+}
+
 export interface PotionEffect {
     /** Доля шкалы отравления (0…1), которую снимает зелье */
     poisonHeal?: number
@@ -27,69 +43,99 @@ export interface PotionEffect {
     lifeExtensionSeconds?: number
     /** Аддитивный бонус удачи в процентах (постоянно до смерти) */
     luckBonusPercent?: number
-    description: string
 }
 
 export const POTION_EFFECTS: Record<string, PotionEffect> = {
-    'Зелье жизни': {
+    life_potion: {
         poisonHeal: 1 / 8,
         lifeExtensionSeconds: 30,
-        description: '−⅛ отравления, +30 сек к запасу жизни',
     },
-    'Зелье маны': {
+    mana_potion: {
         poisonHeal: 1 / 16,
         luckBonusPercent: 2,
-        description: `−¹⁄₁₆ отравления, удача ${formatLuckBonusPercent(2)}`,
     },
-    'Маленький настой': {
+    small_tincture: {
         poisonHeal: 1 / 16,
-        description: '−¹⁄₁₆ отравления',
     },
-    'Загадочное зелье': {
+    mysterious_potion: {
         poisonHeal: 1 / 8,
         lifeExtensionSeconds: 15,
         luckBonusPercent: 1,
-        description: `−⅛ отравления, +15 сек жизни, удача ${formatLuckBonusPercent(1)}`,
     },
-    'Зелье движения': {
+    motion_potion: {
         poisonHeal: 1 / 16,
         lifeExtensionSeconds: 20,
-        description: '−¹⁄₁₆ отравления, +20 сек к запасу жизни',
     },
-    'Тёмное зелье': {
+    dark_potion: {
         poisonHeal: 1 / 4,
-        description: '−¼ отравления',
     },
-    'Звёздное зелье': {
+    star_potion: {
         poisonHeal: 1 / 16,
         luckBonusPercent: 3,
-        description: `−¹⁄₁₆ отравления, удача ${formatLuckBonusPercent(3)}`,
     },
-    'Вихревое зелье': {
+    swirl_potion: {
         poisonHeal: 1 / 4,
         lifeExtensionSeconds: 60,
         luckBonusPercent: 5,
-        description: `−¼ отравления, +60 сек жизни, удача ${formatLuckBonusPercent(5)}, +1 очко победы`,
     },
-    'Магическое зелье': {
+    magic_potion: {
         poisonHeal: 1 / 3,
         lifeExtensionSeconds: 90,
         luckBonusPercent: 7,
-        description: `−⅓ отравления, +90 сек жизни, удача ${formatLuckBonusPercent(7)}, +1 очко победы`,
     },
-    'Зелье стойкости': {
+    endurance_potion: {
         poisonHeal: 1 / 8,
         lifeExtensionSeconds: 45,
-        description: '−⅛ отравления, +45 сек к запасу жизни',
     },
     [FAILED_BREW_POTION]: {
         poisonHeal: 1 / 2,
-        description: '−½ отравления, +1 очко победы',
     },
 }
 
-export function getPotionEffectDescription(potionName: string): string | null {
-    return POTION_EFFECTS[potionName]?.description ?? null
+/** Текст собирается из данных эффекта — числа не расходятся между языками */
+export function getPotionEffectDescription(potionId: string): string | null {
+    const effect = POTION_EFFECTS[potionId]
+    if (!effect) return null
+
+    const parts: string[] = []
+
+    if (effect.poisonHeal) {
+        parts.push(
+            t('effect.poisonHeal', {
+                amount: formatFraction(effect.poisonHeal),
+            }),
+        )
+    }
+
+    if (effect.poisonHarm) {
+        parts.push(
+            t('effect.poisonHarm', {
+                amount: formatFraction(effect.poisonHarm),
+            }),
+        )
+    }
+
+    if (effect.lifeExtensionSeconds) {
+        parts.push(
+            t('effect.lifeExtension', {
+                seconds: effect.lifeExtensionSeconds,
+            }),
+        )
+    }
+
+    if (effect.luckBonusPercent) {
+        parts.push(
+            t('effect.luck', {
+                bonus: formatLuckBonusPercent(effect.luckBonusPercent),
+            }),
+        )
+    }
+
+    if (isLegendaryPotion(potionId)) {
+        parts.push(t('effect.victoryPoint'))
+    }
+
+    return parts.length > 0 ? parts.join(', ') : null
 }
 
 export function drinkPotion(potionName: string): boolean {

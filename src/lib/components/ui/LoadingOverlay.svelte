@@ -1,11 +1,12 @@
 <script lang="ts">
+    import { t } from '$lib/i18n'
     interface Props {
         progress: number
         visible: boolean
         label?: string
     }
 
-    let { progress, visible, label = 'Загрузка...' }: Props = $props()
+    let { progress, visible, label }: Props = $props()
 
     let dismissed = $state(false)
 
@@ -26,7 +27,7 @@
 {#if !dismissed}
     <div class="overlay" class:fade-out={!visible} aria-hidden={!visible}>
         <div class="panel">
-            <p class="label">{label}</p>
+            <p class="label">{label ?? t('loading.default')}</p>
             <div class="track">
                 <div class="fill" style:width="{progress}%"></div>
             </div>

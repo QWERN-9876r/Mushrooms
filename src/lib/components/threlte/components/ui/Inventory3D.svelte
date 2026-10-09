@@ -15,6 +15,7 @@
         isPotion,
     } from '$lib/utils/inventoryItems'
     import { getPotionEffectDescription } from '$lib/utils/potionEffects'
+    import { itemName } from '$lib/i18n'
     import { MathUtils, type PerspectiveCamera } from 'three'
 
     /** Ниже LoadingOverlay (100000), на уровне HUD */
@@ -72,7 +73,7 @@
         ) => void
         onDragMove?: (position: MushroomPosition) => void
         onDragEnd?: () => void
-        onDrinkPotion?: (potionName: string) => void
+        onDrinkPotion?: (potionId: string) => void
         draggingItemId?: string | null
         allowCauldronIngredients?: boolean
     }
@@ -94,20 +95,20 @@
     let activeModelsData = $derived.by(() => {
         if (!isOpen) return []
         return Object.keys(items)
-            .map((name) => {
-                const itemData = getInventoryItem(name)
+            .map((id) => {
+                const itemData = getInventoryItem(id)
                 if (!itemData) return null
                 return {
-                    name,
+                    id,
                     itemData,
-                    count: items[name],
-                    isMushroom: isMushroom(name),
-                    isDrinkable: isDrinkable(name),
-                    canGoToCauldron: allowCauldronIngredients && isPotion(name),
+                    count: items[id],
+                    isMushroom: isMushroom(id),
+                    isDrinkable: isDrinkable(id),
+                    canGoToCauldron: allowCauldronIngredients && isPotion(id),
                 }
             })
             .filter(Boolean) as Array<{
-            name: string
+            id: string
             itemData: InventoryItem
             count: number
             isMushroom: boolean
@@ -125,7 +126,7 @@
 
     // Флаг, чтобы активировать плоскость перетаскивания только в процессе drag-and-drop
     let isAnyItemDragging = $state(false)
-    let hoveredItemName = $state<string | null>(null)
+    let hoveredItemId = $state<string | null>(null)
     let scrollOffset = $state(0)
 
     const viewportWorldHeight = $derived.by(() => {
@@ -155,7 +156,7 @@
 
     $effect(() => {
         if (!isOpen) {
-            hoveredItemName = null
+            hoveredItemId = null
             scrollOffset = 0
         }
     })
@@ -220,7 +221,7 @@
             {/if}
 
             <T.Group position={[0, scrollOffset, 0]}>
-                {#each activeModelsData as item, index (item.name)}
+                {#each activeModelsData as item, index (item.id)}
                     {@const row = Math.floor(index / GRID_COLS)}
                     {@const col = index % GRID_COLS}
                     {@const rowVisible = isRowInViewport(
@@ -260,7 +261,7 @@
                                 </div>
                             </HTML>
 
-                            {#if hoveredItemName === item.name}
+                            {#if hoveredItemId === item.id}
                                 <HTML
                                     pointerEvents="none"
                                     wrapperClass="inventory-html inventory-html--tooltip"
@@ -271,24 +272,22 @@
                                             <div
                                                 class={`inventory-tooltip__name ${item.itemData.rare || ''}`}
                                             >
-                                                {item.name}
+                                                {itemName(item.id)}
                                             </div>
                                         </div>
                                     {:else}
                                         {@const effectText =
-                                            getPotionEffectDescription(
-                                                item.name,
-                                            )}
+                                            getPotionEffectDescription(item.id)}
                                         {@const actionHint =
                                             getPotionInventoryHint(
-                                                item.name,
+                                                item.id,
                                                 allowCauldronIngredients,
                                             )}
                                         <div class="inventory-tooltip">
                                             <div
                                                 class={`inventory-tooltip__name ${item.itemData.rare || ''}`}
                                             >
-                                                {item.name}
+                                                {itemName(item.id)}
                                             </div>
                                             {#if effectText}
                                                 <div
@@ -309,7 +308,7 @@
                                 </HTML>
                             {/if}
 
-                            {#if draggingItemId !== item.name}
+                            {#if draggingItemId !== item.id}
                                 <InventoryMushroomModel
                                     path={item.itemData.modelPath}
                                     width={0.35}
@@ -320,15 +319,13 @@
                                         (item.isMushroom ||
                                             item.canGoToCauldron)}
                                     onUse={item.isDrinkable && item.count > 0
-                                        ? () => onDrinkPotion?.(item.name)
+                                        ? () => onDrinkPotion?.(item.id)
                                         : undefined}
                                     onHoverChange={(hovered) => {
                                         if (hovered) {
-                                            hoveredItemName = item.name
-                                        } else if (
-                                            hoveredItemName === item.name
-                                        ) {
-                                            hoveredItemName = null
+                                            hoveredItemId = item.id
+                                        } else if (hoveredItemId === item.id) {
+                                            hoveredItemId = null
                                         }
                                     }}
                                     onDragStart={(layout) => {
@@ -338,18 +335,14 @@
                                         )
                                             return
                                         isAnyItemDragging = true
-                                        onDragStart?.(
-                                            item.itemData,
-                                            item.name,
-                                            {
-                                                ...layout,
-                                                slotPosition: [
-                                                    inventoryX + offsetX,
-                                                    offsetY + scrollOffset,
-                                                    depthZ,
-                                                ],
-                                            },
-                                        )
+                                        onDragStart?.(item.itemData, item.id, {
+                                            ...layout,
+                                            slotPosition: [
+                                                inventoryX + offsetX,
+                                                offsetY + scrollOffset,
+                                                depthZ,
+                                            ],
+                                        })
                                     }}
                                     onDragMove={(pos) => {
                                         onDragMove?.(pos)

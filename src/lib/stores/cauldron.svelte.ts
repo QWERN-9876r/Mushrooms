@@ -4,6 +4,7 @@ import {
     isCauldronReady,
     resolveBrewRecipe,
 } from '$lib/utils/brewing'
+import { migrateItemId } from '$lib/utils/legacyItemIds'
 import { brewEffect } from './brewEffect.svelte'
 import { inventory } from './inventory.svelte'
 
@@ -21,14 +22,19 @@ class CauldronStore {
         const saved = localStorage.getItem(STORAGE_KEY)
         if (saved) {
             const parsed = JSON.parse(saved) as string[]
-            this.#ingredients = parsed.slice(0, CAULDRON_CAPACITY)
+            this.#ingredients = parsed
+                .slice(0, CAULDRON_CAPACITY)
+                .map(migrateItemId)
+            this.#persist()
             return
         }
 
         const legacyList = localStorage.getItem(LEGACY_MUSHROOMS_KEY)
         if (legacyList) {
             const parsed = JSON.parse(legacyList) as string[]
-            this.#ingredients = parsed.slice(0, CAULDRON_CAPACITY)
+            this.#ingredients = parsed
+                .slice(0, CAULDRON_CAPACITY)
+                .map(migrateItemId)
             this.#persist()
             localStorage.removeItem(LEGACY_MUSHROOMS_KEY)
             return
@@ -36,7 +42,7 @@ class CauldronStore {
 
         const legacy = localStorage.getItem(LEGACY_STORAGE_KEY)
         if (legacy) {
-            this.#ingredients = [legacy]
+            this.#ingredients = [migrateItemId(legacy)]
             this.#persist()
             localStorage.removeItem(LEGACY_STORAGE_KEY)
         }

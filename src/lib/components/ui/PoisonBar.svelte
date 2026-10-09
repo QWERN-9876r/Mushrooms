@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { t } from '$lib/i18n'
     interface Props {
         progress: number
     }
@@ -6,7 +7,7 @@
     let { progress }: Props = $props()
 </script>
 
-<div class="poison-bar" aria-label="Отравление парами тропы">
+<div class="poison-bar" aria-label={t('hud.poison')}>
     <div class="track">
         <div class="fill" style:width="{progress}%"></div>
     </div>
